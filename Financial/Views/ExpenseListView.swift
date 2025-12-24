@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ExpenseListView: View {
     @StateObject private var viewModel = ExpenseViewModel()
+    @State private var showingDeleteAlert = false
     
     var body: some View {
         NavigationStack {
@@ -21,12 +22,13 @@ struct ExpenseListView: View {
                         
                         Text("R$ \(viewModel.totalAmount, specifier: "%.2f")")
                             .font(.system(size: 34, weight: .bold))
-                            .foregroundStyle(Color.primary)
+                            .foregroundStyle(viewModel.colorTotalAmount())
                     }
                     .frame(maxWidth: .infinity)
                     .padding(20)
-                    .listRowBackground(Color.clear)
                 }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
                 
                 Section("Ultimos lançamentos") {
                     if viewModel.expenses.isEmpty {
@@ -36,15 +38,42 @@ struct ExpenseListView: View {
                         ForEach(viewModel.expenses) { expense in
                             ExpenseRowView(expense: expense)
                         }
+                        .onDelete(perform: viewModel.removeExpense)
                     }
                 }
             }
             .listStyle(.insetGrouped)
             .navigationTitle("Minhas finanças")
             .toolbar {
-                NavigationLink("+") {
-                    AddExpenseView(viewModel: viewModel)
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        AddExpenseView(viewModel: viewModel)
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundStyle(Color.blue.opacity(0.9))
+                            .font(.title2)
+                    }
                 }
+                .sharedBackgroundVisibility(.hidden)
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(role: .destructive) {
+                        showingDeleteAlert = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundStyle(viewModel.expenses.isEmpty ? .gray.opacity(0.3) : .red)
+                    }
+                    .disabled(viewModel.expenses.isEmpty)
+                }
+                .sharedBackgroundVisibility(.hidden)
+            }
+            .alert("Apagar tudo?", isPresented: $showingDeleteAlert) {
+                Button("Cancelar", role: .cancel) { }
+                Button("Apagar", role: .destructive) {
+                    viewModel.clearExpenses()
+                }
+            } message: {
+                Text("Essa ação não pode ser desfeita.")
             }
         }
     }

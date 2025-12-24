@@ -11,11 +11,15 @@ import Combine
 class ExpenseViewModel: ObservableObject {
     @Published var expenses: [Expense]
     
+    var totalAmount: Double {
+        expenses.reduce(0) { $0 + $1.amount }
+    }
+    
     init() {
         self.expenses = []
     }
     
-    func addExpense(title: String, amount: Double, category: String) {
+    func addExpense(title: String, amount: Double, category: Category) -> Void {
         let newExpense = Expense(
             title: title,
             amount: amount,
@@ -25,7 +29,22 @@ class ExpenseViewModel: ObservableObject {
         expenses.append(newExpense)
     }
     
-    var totalAmount: Double {
-        expenses.reduce(0) { $0 + $1.amount }
+    func removeExpense(at offset: IndexSet) -> Void {
+        expenses.remove(atOffsets: offset)
+    }
+    
+    func clearExpenses() -> Void {
+        expenses.removeAll()
+    }
+    
+    func colorTotalAmount() -> Color {
+        switch totalAmount {
+        case 0..<1000:
+            return .primary
+        case 1000..<2000:
+            return .orange
+        default:
+            return .red
+        }
     }
 }

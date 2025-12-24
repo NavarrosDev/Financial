@@ -12,11 +12,9 @@ struct AddExpenseView: View {
 
     @State private var title = ""
     @State private var amount = ""
-    @State private var category = "Alimentação"
+    @State private var category: Category = .alimentacao
     
     @Environment(\.dismiss) var dismiss
-    
-    let categories = ["Alimentação", "Transporte", "Lazer", "Contas", "Outros"]
     
     var body: some View {
         Form {
@@ -25,8 +23,9 @@ struct AddExpenseView: View {
                 .keyboardType(.decimalPad)
             
             Picker("Categoria", selection: $category) {
-                ForEach(categories, id: \.self) { cat in
-                    Text(cat)
+                ForEach(Category.allCases) { cat in
+                    Text(cat.rawValue)
+                        .tag(cat)
                 }
             }
                     
@@ -42,17 +41,7 @@ struct AddExpenseView: View {
             .frame(maxWidth: .infinity)
             
         }
-
-//
-//            
-//            Button("Salvar") {
-//                if let value = Double(amount) {
-//                    viewModel.addExpense(title: title, amount: value, category: category)
-//                    dismiss()
-//                }
-//            }
-//            .disabled(title.isEmpty || amount.isEmpty)
-        }
+    }
 }
 
 #Preview {

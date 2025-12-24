@@ -12,21 +12,31 @@ struct ExpenseRowView: View {
     
     var body: some View {
         HStack {
+            ZStack {
+                Circle()
+                    .fill(Color.blue.opacity(0.1))
+                    .frame(width: 40, height: 40)
+                Image(systemName: "dollarsign")
+                    .foregroundStyle(Color.blue)
+                    .font(.caption)
+            }
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(expense.title)
                     .font(.headline)
                 
-                Text(expense.category)
+                Text(expense.category.rawValue)
                     .font(.caption)
                     .foregroundStyle(Color.secondary)
             }
             Spacer()
             
             Text("R$ \(expense.amount, specifier: "%.2f")")
+                .font(.callout)
                 .fontWeight(.semibold)
-                .foregroundStyle(expense.amount > 100 ? Color.orange : Color.primary)
+                .foregroundStyle(Color.primary)
         }
-        .padding()
+        .padding(.vertical, 4)
     }
 }
 
@@ -35,7 +45,7 @@ struct ExpenseRowView: View {
         expense: Expense(
             title: "Teste",
             amount: 100,
-            category: "Alimentação",
+            category: Category.alimentacao,
             date: Date())
     )
 }
