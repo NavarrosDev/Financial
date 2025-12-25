@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddExpenseView: View {
-    @ObservedObject var viewModel: ExpenseViewModel
+    @ObservedObject var expenseViewModel: ExpenseViewModel
 
     @State private var title = ""
     @State private var amount = ""
@@ -31,7 +31,7 @@ struct AddExpenseView: View {
                     
             Button {
                 if let value = Double(amount) {
-                    viewModel.addExpense(title: title, amount: value, category: category)
+                    expenseViewModel.addExpense(title: title, amount: value, category: category)
                     dismiss()
                 }
             } label: {
@@ -45,5 +45,5 @@ struct AddExpenseView: View {
 }
 
 #Preview {
-    AddExpenseView(viewModel: .init())
+    AddExpenseView(expenseViewModel: .init())
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExpenseListView: View {
-    @StateObject private var viewModel = ExpenseViewModel()
+    @StateObject private var expenseViewModel = ExpenseViewModel()
     @State private var showingDeleteAlert = false
     
     var body: some View {
@@ -20,9 +20,9 @@ struct ExpenseListView: View {
                             .font(.subheadline)
                             .foregroundStyle(Color.secondary)
                         
-                        Text("R$ \(viewModel.totalAmount, specifier: "%.2f")")
+                        Text("R$ \(expenseViewModel.totalAmount, specifier: "%.2f")")
                             .font(.system(size: 34, weight: .bold))
-                            .foregroundStyle(viewModel.colorTotalAmount())
+                            .foregroundStyle(expenseViewModel.colorTotalAmount())
                     }
                     .frame(maxWidth: .infinity)
                     .padding(20)
@@ -31,14 +31,14 @@ struct ExpenseListView: View {
                 .listRowInsets(EdgeInsets())
                 
                 Section("Ultimos lançamentos") {
-                    if viewModel.expenses.isEmpty {
+                    if expenseViewModel.expenses.isEmpty {
                         Text("Nenhum lançamento feito ainda.")
                             .foregroundColor(.gray)
                     } else {
-                        ForEach(viewModel.expenses) { expense in
+                        ForEach(expenseViewModel.expenses) { expense in
                             ExpenseRowView(expense: expense)
                         }
-                        .onDelete(perform: viewModel.removeExpense)
+                        .onDelete(perform: expenseViewModel.removeExpense)
                     }
                 }
             }
@@ -47,7 +47,7 @@ struct ExpenseListView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
-                        AddExpenseView(viewModel: viewModel)
+                        AddExpenseView(expenseViewModel: expenseViewModel)
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .foregroundStyle(Color.blue.opacity(0.9))
@@ -61,16 +61,16 @@ struct ExpenseListView: View {
                         showingDeleteAlert = true
                     } label: {
                         Image(systemName: "trash")
-                            .foregroundStyle(viewModel.expenses.isEmpty ? .gray.opacity(0.3) : .red)
+                            .foregroundStyle(expenseViewModel.expenses.isEmpty ? .gray.opacity(0.3) : .red)
                     }
-                    .disabled(viewModel.expenses.isEmpty)
+                    .disabled(expenseViewModel.expenses.isEmpty)
                 }
                 .sharedBackgroundVisibility(.hidden)
             }
             .alert("Apagar tudo?", isPresented: $showingDeleteAlert) {
                 Button("Cancelar", role: .cancel) { }
                 Button("Apagar", role: .destructive) {
-                    viewModel.clearExpenses()
+                    expenseViewModel.clearExpenses()
                 }
             } message: {
                 Text("Essa ação não pode ser desfeita.")
