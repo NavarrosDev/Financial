@@ -7,9 +7,8 @@
 
 import SwiftUI
 
-struct ExpenseListView: View {
-    @StateObject private var expenseViewModel = ExpenseViewModel()
-    @State private var showingDeleteAlert = false
+struct TransactionListView: View {
+    @StateObject private var transactionViewModel = TransactionViewModel()
     
     var body: some View {
         NavigationStack {
@@ -20,9 +19,9 @@ struct ExpenseListView: View {
                             .font(.subheadline)
                             .foregroundStyle(Color.secondary)
                         
-                        Text("R$ \(expenseViewModel.totalAmount, specifier: "%.2f")")
+                        Text("R$ \(transactionViewModel.totalAmount, specifier: "%.2f")")
                             .font(.system(size: 34, weight: .bold))
-                            .foregroundStyle(expenseViewModel.colorTotalAmount())
+                            .foregroundStyle(transactionViewModel.colorTotalAmount())
                     }
                     .frame(maxWidth: .infinity)
                     .padding(20)
@@ -31,14 +30,14 @@ struct ExpenseListView: View {
                 .listRowInsets(EdgeInsets())
                 
                 Section("Ultimos lançamentos") {
-                    if expenseViewModel.expenses.isEmpty {
+                    if transactionViewModel.transaction.isEmpty {
                         Text("Nenhum lançamento feito ainda.")
                             .foregroundColor(.gray)
                     } else {
-                        ForEach(expenseViewModel.expenses) { expense in
-                            ExpenseRowView(expense: expense)
+                        ForEach(transactionViewModel.transaction) { transaction in
+                            AddTransactionView(transactionViewModel: transactionViewModel)
                         }
-                        .onDelete(perform: expenseViewModel.removeExpense)
+                        .onDelete(perform: transactionViewModel.removeTransaction)
                     }
                 }
             }
@@ -47,7 +46,7 @@ struct ExpenseListView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
-                        AddExpenseView(expenseViewModel: expenseViewModel)
+                        AddTransactionView(transactionViewModel: transactionViewModel)
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .foregroundStyle(Color.blue.opacity(0.9))
@@ -55,30 +54,11 @@ struct ExpenseListView: View {
                     }
                 }
                 .sharedBackgroundVisibility(.hidden)
-                
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(role: .destructive) {
-                        showingDeleteAlert = true
-                    } label: {
-                        Image(systemName: "trash")
-                            .foregroundStyle(expenseViewModel.expenses.isEmpty ? .gray.opacity(0.3) : .red)
-                    }
-                    .disabled(expenseViewModel.expenses.isEmpty)
-                }
-                .sharedBackgroundVisibility(.hidden)
-            }
-            .alert("Apagar tudo?", isPresented: $showingDeleteAlert) {
-                Button("Cancelar", role: .cancel) { }
-                Button("Apagar", role: .destructive) {
-                    expenseViewModel.clearExpenses()
-                }
-            } message: {
-                Text("Essa ação não pode ser desfeita.")
             }
         }
     }
 }
 
 #Preview {
-    ExpenseListView()
+    TransactionListView()
 }

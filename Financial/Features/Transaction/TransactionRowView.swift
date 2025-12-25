@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct ExpenseRowView: View {
-    var expense: Expense
+struct TransactionRowView: View {
+    var transaction: Transaction
     
     var body: some View {
         HStack {
@@ -22,16 +22,16 @@ struct ExpenseRowView: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(expense.title)
+                Text(transaction.title)
                     .font(.headline)
                 
-                Text(expense.category.rawValue)
+                Text(transaction.category.rawValue)
                     .font(.caption)
                     .foregroundStyle(Color.secondary)
             }
             Spacer()
             
-            Text("R$ \(expense.amount, specifier: "%.2f")")
+            Text("R$ \(transaction.amount, specifier: "%.2f")")
                 .font(.callout)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.primary)
@@ -41,11 +41,12 @@ struct ExpenseRowView: View {
 }
 
 #Preview {
-    ExpenseRowView(
-        expense: Expense(
+    TransactionRowView(
+        transaction: Transaction(
             title: "Teste",
             amount: 100,
             category: Category.alimentacao,
+            transactionType: .expense,
             date: Date())
     )
 }

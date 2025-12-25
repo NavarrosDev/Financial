@@ -8,33 +8,30 @@
 import SwiftUI
 import Combine
 
-class ExpenseViewModel: ObservableObject {
-    @Published var expenses: [Expense]
+class TransactionViewModel: ObservableObject {
+    @Published var transaction: [Transaction]
     
     var totalAmount: Double {
-        expenses.reduce(0) { $0 + $1.amount }
+        transaction.reduce(0) { $0 + $1.amount }
     }
     
     init() {
-        self.expenses = []
+        self.transaction = []
     }
     
-    func addExpense(title: String, amount: Double, category: Category) -> Void {
-        let newExpense = Expense(
+    func addTransaction(title: String, amount: Double, category: Category, transactionType: TransactionType) -> Void {
+        let newTransaction = Transaction(
             title: title,
             amount: amount,
             category: category,
+            transactionType: transactionType,
             date: Date()
         )
-        expenses.append(newExpense)
+        transaction.append(newTransaction)
     }
     
-    func removeExpense(at offset: IndexSet) -> Void {
-        expenses.remove(atOffsets: offset)
-    }
-    
-    func clearExpenses() -> Void {
-        expenses.removeAll()
+    func removeTransaction(at offset: IndexSet) -> Void {
+        transaction.remove(atOffsets: offset)
     }
     
     func colorTotalAmount() -> Color {

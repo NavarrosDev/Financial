@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct AddExpenseView: View {
-    @ObservedObject var expenseViewModel: ExpenseViewModel
+struct AddTransactionView: View {
+    @ObservedObject var transactionViewModel: TransactionViewModel
 
     @State private var title = ""
     @State private var amount = ""
@@ -28,10 +28,12 @@ struct AddExpenseView: View {
                         .tag(cat)
                 }
             }
+            
+            // Picker para transactiontype
                     
             Button {
                 if let value = Double(amount) {
-                    expenseViewModel.addExpense(title: title, amount: value, category: category)
+                    transactionViewModel.addTransaction(title: title, amount: value, category: category, transactionType: .expense)
                     dismiss()
                 }
             } label: {
@@ -45,5 +47,5 @@ struct AddExpenseView: View {
 }
 
 #Preview {
-    AddExpenseView(expenseViewModel: .init())
+    AddTransactionView(transactionViewModel: .init())
 }

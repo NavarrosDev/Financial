@@ -14,7 +14,7 @@ struct RootView: View {
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-            ExpenseListView()
+            TransactionListView()
                 .tabItem {
                     Label("Finanças", systemImage: "list.bullet")
                 }
