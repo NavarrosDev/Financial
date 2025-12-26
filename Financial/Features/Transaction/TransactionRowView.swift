@@ -14,10 +14,10 @@ struct TransactionRowView: View {
         HStack {
             ZStack {
                 Circle()
-                    .fill(Color.blue.opacity(0.1))
+                    .fill(transaction.transactionType == .income ? .green : .orange).opacity(0.2)
                     .frame(width: 40, height: 40)
                 Image(systemName: "dollarsign")
-                    .foregroundStyle(Color.blue)
+                    .foregroundStyle(transaction.transactionType == .income ? .green : .orange)
                     .font(.caption)
             }
             
@@ -31,10 +31,10 @@ struct TransactionRowView: View {
             }
             Spacer()
             
-            Text("R$ \(transaction.amount, specifier: "%.2f")")
+            Text("R$ \(transaction.transactionType == .income ? "" : "-")\(transaction.amount, specifier: "%.2f")")
                 .font(.callout)
                 .fontWeight(.semibold)
-                .foregroundStyle(Color.primary)
+                .foregroundStyle(transaction.transactionType == .income ? .green : .red)
         }
         .padding(.vertical, 4)
     }

@@ -13,35 +13,63 @@ struct AddTransactionView: View {
     @State private var title = ""
     @State private var amount = ""
     @State private var category: Category = .alimentacao
+    @State private var transactionType: TransactionType = .expense
     
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         Form {
-            TextField("Descriçao", text: $title)
-            TextField("Valor", text: $amount)
-                .keyboardType(.decimalPad)
             
-            Picker("Categoria", selection: $category) {
-                ForEach(Category.allCases) { cat in
-                    Text(cat.rawValue)
-                        .tag(cat)
+            Section {
+                Picker("Tipo", selection: $transactionType) {
+                    ForEach(TransactionType.allCases) { type in
+                        Text(type.rawValue)
+                            .tag(type)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .listRowBackground(Color.clear)
+            }
+            
+            Section("Informações Gerais") {
+                HStack {
+                    TextField("Descriçao", text: $title)
+                        .frame(maxWidth: .infinity)
+                    TextField("Valor", text: $amount)
+                        .keyboardType(.decimalPad)
+                        .frame(width: 100)
+                }
+                
+                Picker("Categoria", selection: $category) {
+                    ForEach(Category.allCases) { cat in
+                        Text(cat.rawValue)
+                            .tag(cat)
+                    }
                 }
             }
             
-            // Picker para transactiontype
-                    
-            Button {
-                if let value = Double(amount) {
-                    transactionViewModel.addTransaction(title: title, amount: value, category: category, transactionType: .expense)
-                    dismiss()
+            Section {
+                Button {
+                    saveTransaction()
+                } label: {
+                    Text("Confirmar \(transactionType.rawValue)")
+                        .frame(maxWidth: .infinity)
+                        .bold()
                 }
-            } label: {
-                Text("Salvar")
+                .disabled(title.isEmpty || amount.isEmpty)
+                .frame(maxWidth: .infinity)
             }
-            .disabled(title.isEmpty || amount.isEmpty)
-            .frame(maxWidth: .infinity)
-            
+        }
+        .navigationTitle("Novo Lançamento")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    fileprivate func saveTransaction() {
+        if let value = Double(amount) {
+            transactionViewModel.addTransaction(
+                title: title, amount: value, category: category, transactionType: transactionType
+            )
+            dismiss()
         }
     }
 }

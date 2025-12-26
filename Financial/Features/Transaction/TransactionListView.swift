@@ -14,28 +14,18 @@ struct TransactionListView: View {
         NavigationStack {
             List {
                 Section {
-                    VStack(spacing: 8) {
-                        Text("Total gasto")
-                            .font(.subheadline)
-                            .foregroundStyle(Color.secondary)
-                        
-                        Text("R$ \(transactionViewModel.totalAmount, specifier: "%.2f")")
-                            .font(.system(size: 34, weight: .bold))
-                            .foregroundStyle(transactionViewModel.colorTotalAmount())
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(20)
+                    balances()
                 }
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
                 
                 Section("Ultimos lançamentos") {
-                    if transactionViewModel.transaction.isEmpty {
+                    if transactionViewModel.transactions.isEmpty {
                         Text("Nenhum lançamento feito ainda.")
                             .foregroundColor(.gray)
                     } else {
-                        ForEach(transactionViewModel.transaction) { transaction in
-                            AddTransactionView(transactionViewModel: transactionViewModel)
+                        ForEach(transactionViewModel.transactions) { transaction in
+                           TransactionRowView(transaction: transaction)
                         }
                         .onDelete(perform: transactionViewModel.removeTransaction)
                     }
@@ -56,6 +46,52 @@ struct TransactionListView: View {
                 .sharedBackgroundVisibility(.hidden)
             }
         }
+    }
+    
+    fileprivate func balances() -> some View {
+        return VStack(spacing: 20) {
+            VStack(spacing: 4) {
+                Text("Saldo Disponivel")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                
+                Text("R$ \(transactionViewModel.totalAmount, specifier: "%.2f")")
+                    .font(.system(size: 38, weight: .bold, design: .rounded))
+                    .foregroundColor(transactionViewModel.totalAmount >= 0 ? .primary : .red)
+            }
+            .padding(.top, 10)
+            
+            HStack {
+                VStack(alignment: .leading) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.up.circle.fill")
+                        Text("Entradas")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.green)
+                    
+                    Text("R$ \(transactionViewModel.totalIncomes, specifier: "%.2f")")
+                        .font(.headline)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing) {
+                    HStack(spacing: 4) {
+                        Text("Saídas")
+                        Image(systemName: "arrow.down.circle.fill")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    
+                    Text("R$ \(transactionViewModel.totalExpenses, specifier: "%.2f")")
+                        .font(.headline)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 10)
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 

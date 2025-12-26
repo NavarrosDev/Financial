@@ -9,14 +9,22 @@ import SwiftUI
 import Combine
 
 class TransactionViewModel: ObservableObject {
-    @Published var transaction: [Transaction]
+    @Published var transactions: [Transaction]
     
+    var totalIncomes: Double {
+        transactions.filter { $0.transactionType == .income }.reduce(0) { $0 + $1.amount }
+    }
+
+    var totalExpenses: Double {
+        transactions.filter { $0.transactionType == .expense }.reduce(0) { $0 + $1.amount }
+    }
+
     var totalAmount: Double {
-        transaction.reduce(0) { $0 + $1.amount }
+        totalIncomes - totalExpenses
     }
     
     init() {
-        self.transaction = []
+        self.transactions = []
     }
     
     func addTransaction(title: String, amount: Double, category: Category, transactionType: TransactionType) -> Void {
@@ -27,21 +35,10 @@ class TransactionViewModel: ObservableObject {
             transactionType: transactionType,
             date: Date()
         )
-        transaction.append(newTransaction)
+        transactions.append(newTransaction)
     }
     
     func removeTransaction(at offset: IndexSet) -> Void {
-        transaction.remove(atOffsets: offset)
-    }
-    
-    func colorTotalAmount() -> Color {
-        switch totalAmount {
-        case 0..<1000:
-            return .primary
-        case 1000..<2000:
-            return .orange
-        default:
-            return .red
-        }
+        transactions.remove(atOffsets: offset)
     }
 }
