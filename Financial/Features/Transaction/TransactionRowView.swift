@@ -45,8 +45,8 @@ struct TransactionRowView: View {
         transaction: Transaction(
             title: "Teste",
             amount: 100,
-            category: Category.alimentacao,
-            transactionType: .expense,
+            category: Category.food,
+            transactionType: .income,
             date: Date())
     )
 }

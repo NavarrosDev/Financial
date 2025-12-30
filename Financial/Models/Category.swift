@@ -6,11 +6,12 @@
 //
 
 enum Category: String, CaseIterable, Identifiable {
-    case alimentacao = "Alimentação"
-    case transporte = "Transporte"
-    case lazer = "Lazer"
-    case contas = "Contas"
-    case outros = "Outros"
+    case entry = "Entrada"
+    case food = "Alimentação"
+    case transport = "Transporte"
+    case leisure = "Lazer"
+    case accounts = "Contas"
+    case others = "Outros"
     
     var id: Self { self }
 }

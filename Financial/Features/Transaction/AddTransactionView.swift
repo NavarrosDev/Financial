@@ -12,7 +12,7 @@ struct AddTransactionView: View {
 
     @State private var title = ""
     @State private var amount = ""
-    @State private var category: Category = .alimentacao
+    @State private var category: Category = .food
     @State private var transactionType: TransactionType = .expense
     
     @Environment(\.dismiss) var dismiss
@@ -40,10 +40,12 @@ struct AddTransactionView: View {
                         .frame(width: 100)
                 }
                 
-                Picker("Categoria", selection: $category) {
-                    ForEach(Category.allCases) { cat in
-                        Text(cat.rawValue)
-                            .tag(cat)
+                if transactionType == .expense {
+                    Picker("Categoria", selection: $category) {
+                        ForEach(Category.allCases.filter { $0 != .entry }) { cat in
+                            Text(cat.rawValue)
+                                .tag(cat)
+                        }
                     }
                 }
             }
@@ -67,7 +69,10 @@ struct AddTransactionView: View {
     fileprivate func saveTransaction() {
         if let value = Double(amount) {
             transactionViewModel.addTransaction(
-                title: title, amount: value, category: category, transactionType: transactionType
+                title: title,
+                amount: value,
+                category: transactionType == .expense ? category : .entry,
+                transactionType: transactionType
             )
             dismiss()
         }

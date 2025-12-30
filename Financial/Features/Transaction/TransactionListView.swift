@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TransactionListView: View {
-    @StateObject private var transactionViewModel = TransactionViewModel()
+    @ObservedObject var transactionViewModel: TransactionViewModel
     
     var body: some View {
         NavigationStack {
@@ -20,14 +20,17 @@ struct TransactionListView: View {
                 .listRowInsets(EdgeInsets())
                 
                 Section("Ultimos lançamentos") {
-                    if transactionViewModel.transactions.isEmpty {
+                    let transactions = transactionViewModel.sortedTransactions
+                    if transactions.isEmpty {
                         Text("Nenhum lançamento feito ainda.")
                             .foregroundColor(.gray)
                     } else {
-                        ForEach(transactionViewModel.transactions) { transaction in
+                        ForEach(transactions) { transaction in
                            TransactionRowView(transaction: transaction)
                         }
-                        .onDelete(perform: transactionViewModel.removeTransaction)
+                        .onDelete { indexSet in
+                            transactionViewModel.removeTransaction(at: indexSet, from: transactions)
+                        }
                     }
                 }
             }
@@ -96,5 +99,5 @@ struct TransactionListView: View {
 }
 
 #Preview {
-    TransactionListView()
+    TransactionListView(transactionViewModel: TransactionViewModel())
 }

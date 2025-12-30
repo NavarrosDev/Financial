@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct RootView: View {
+    @StateObject var transactionViewModel = TransactionViewModel()
+    
     var body: some View {
         TabView {
-            HomeView()
+            HomeView(transViewModel: transactionViewModel)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-            TransactionListView()
+            TransactionListView(transactionViewModel: transactionViewModel)
                 .tabItem {
                     Label("Finanças", systemImage: "list.bullet")
                 }
