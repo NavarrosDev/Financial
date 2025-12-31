@@ -37,6 +37,10 @@ struct AddTransactionView: View {
                         .frame(maxWidth: .infinity)
                     TextField("Valor", text: $amount)
                         .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                        .onChange(of: amount, { oldValue, newValue in
+                            amount = newValue.sanitizedNumeric()
+                        })
                         .frame(width: 100)
                 }
                 

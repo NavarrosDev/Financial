@@ -9,9 +9,10 @@ import SwiftUI
 
 struct EditBudgetView: View {
     @Binding var budget: Double
-    @State private var tempValue: Double = 0.0
-    
+    @State private var textInput: String = ""
+
     @Environment(\.dismiss) var dismiss
+    
     
     var body: some View {
         NavigationStack {
@@ -19,8 +20,11 @@ struct EditBudgetView: View {
                 Section("Defina seu limite mensal") {
                     HStack {
                         Text("R$")
-                        TextField("0.00", value: $tempValue, format: .number)
+                        TextField("0.00", text: $textInput)
                             .keyboardType(.decimalPad)
+                            .onChange(of: textInput) { oldValue, newValue in
+                                textInput = newValue.sanitizedNumeric()
+                            }
                     }
                 }
             }
@@ -33,13 +37,14 @@ struct EditBudgetView: View {
 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Salvar") {
-                        budget = tempValue
+                        if let value = Double(textInput) { budget = value }
                         dismiss()
                     }
                 }
             }
             .onAppear {
-                tempValue = budget
+                textInput = String(format: "%.2f", budget)
+                textInput = textInput.replacingOccurrences(of: ".", with: ",")
             }
         }
     }

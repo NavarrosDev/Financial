@@ -22,7 +22,7 @@ class TransactionViewModel: ObservableObject {
     var sortedTransactions: [Transaction] {
         transactions.sorted { $0.date > $1.date }
     }
-    
+        
     var totalIncomes: Double {
         transactions.filter { $0.transactionType == .income }.reduce(0) { $0 + $1.amount }
     }
@@ -76,12 +76,22 @@ class TransactionViewModel: ObservableObject {
     }
         
     func removeTransaction(at offset: IndexSet, from displayedList: [Transaction]) -> Void {
-        offset.forEach {index in
+        offset.forEach { index in
             let transactionToDelete = displayedList[index]
             if let originalIndex = transactions.firstIndex(where: { $0.id == transactionToDelete.id }) {
                 transactions.remove(at: originalIndex)
             }
         }
+    }
+    
+    static func filterNumericInput(_ input: String) -> String {
+        var filtered = input
+            .replacingOccurrences(of: ",", with: ".")
+            .filter { !"0123456789.".contains($0) }
+            
+        let component = filtered.split(separator: ".")
+        if component.count > 0 { filtered = "\(component[0]).\(component[1])" }
         
+        return filtered
     }
 }
