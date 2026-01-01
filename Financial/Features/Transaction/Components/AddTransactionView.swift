@@ -55,9 +55,7 @@ struct AddTransactionView: View {
             }
             
             Section {
-                Button {
-                    saveTransaction()
-                } label: {
+                Button { saveTransaction() } label: {
                     Text("Confirmar \(transactionType.rawValue)")
                         .frame(maxWidth: .infinity)
                         .bold()

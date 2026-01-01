@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BudgetProgressBar: View {
+struct BudgetProgressBarView: View {
     var progress: Double
     
     var color: Color {
@@ -38,9 +38,9 @@ struct BudgetProgressBar: View {
 
 #Preview {
     VStack {
-        BudgetProgressBar(progress: 0.2)
-        BudgetProgressBar(progress: 0.8)
-        BudgetProgressBar(progress: 1.0)
+        BudgetProgressBarView(progress: 0.2)
+        BudgetProgressBarView(progress: 0.8)
+        BudgetProgressBarView(progress: 1.0)
     }
     .padding()
 }
