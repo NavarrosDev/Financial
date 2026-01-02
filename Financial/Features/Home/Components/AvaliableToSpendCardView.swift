@@ -33,9 +33,9 @@ struct AvaliableToSpendCardView: View {
                         .padding(.top, 4)
                     
                     HStack {
-                        Text("Gasto: R$ \(transViewModel.totalSpentThisMonth, specifier: "%.0f")")
+                        Text("Gasto: R$ \(transViewModel.totalSpentThisMonth, specifier: "%.2f")")
                         Spacer()
-                        Text("Limite: R$ \(transViewModel.monthlyBudget, specifier: "%.0f")")
+                        Text("Limite: R$ \(transViewModel.monthlyBudget, specifier: "%.2f")")
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
