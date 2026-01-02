@@ -11,48 +11,49 @@ struct AvaliableToSpendCardView: View {
     @ObservedObject var transViewModel: TransactionViewModel
     @Binding var showEditBudget: Bool
     
+    var remainingBudget: Double {
+        if transViewModel.remainingBudget < 0 { return 0 }
+        return transViewModel.remainingBudget
+    }
+    
     var body: some View {
-        VStack(spacing: 24) {
-            VStack(spacing: 16) {
-                Text("Disponível para gastar")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                
-                Text("R$ \(transViewModel.remainingBudget, specifier: "%.2f")")
-                    .font(.system(size: 40, weight: .bold, design: .rounded))
-                    .foregroundStyle(transViewModel.remainingBudget < 0 ? .red : .primary)
-                
-                BudgetProgressBarView(progress: transViewModel.budgetProgress)
-                    .padding(.top, 4)
-                
-                HStack {
-                    Text("Gasto: R$ \(transViewModel.totalSpentThisMonth, specifier: "%.0f")")
-                    Spacer()
-                    Button { showEditBudget = true }
-                        label: {
-                            HStack {
-                                Text("Meta: R$ \(transViewModel.monthlyBudget, specifier: "%.0f")")
-                                Image(systemName: "pencil.circle.fill")
-                                    .foregroundStyle(.blue)
-                            }
+        Button {
+            showEditBudget = true
+        } label: {
+            VStack(spacing: 24) {
+                VStack(spacing: 16) {
+                    Text("Restante com base no limite")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    Text("R$ \(remainingBudget, specifier: "%.2f")")
+                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                    
+                    BudgetProgressBarView(progress: transViewModel.budgetProgress)
+                        .padding(.top, 4)
+                    
+                    HStack {
+                        Text("Gasto: R$ \(transViewModel.totalSpentThisMonth, specifier: "%.0f")")
+                        Spacer()
+                        Text("Limite: R$ \(transViewModel.monthlyBudget, specifier: "%.0f")")
                     }
-                    .buttonStyle(.plain)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .padding(24)
+                .background(Color(uiColor: .systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+                .padding(.horizontal)
+                
+                Spacer()
             }
-            .padding(24)
-            .background(Color(uiColor: .systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-            .padding(.horizontal)
-            
-            Spacer()
+            .padding(.top)
         }
-        .padding(.top)
+        .buttonStyle(.plain)
     }
 }
 
 #Preview {
-//    avaliableToSpendCard(transViewModel: TransactionViewModel(), showEditBudget: false as Bool)
+    AvaliableToSpendCardView(transViewModel: TransactionViewModel(), showEditBudget: .constant(false))
 }
