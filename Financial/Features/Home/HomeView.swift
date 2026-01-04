@@ -10,14 +10,19 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var transViewModel: TransactionViewModel
     @State private var showEditBudget = false
+    @Binding var selectedTab: AppTab
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 AvaliableToSpendCardView(transViewModel: transViewModel, showEditBudget: $showEditBudget)
                 HStack(spacing: 16) {
-                    CardValueView(value: transViewModel.totalIncomes, type: .income)
-                    CardValueView(value: transViewModel.totalExpenses, type: .expense)
+                    sumaryCardButtonView(value: transViewModel.totalIncomes, type: .income) {
+                        selectedTab = .transactions
+                    }
+                    sumaryCardButtonView(value: transViewModel.totalExpenses, type: .expense) {
+                        selectedTab = .transactions
+                    }
                 }
                 .padding(.horizontal)
             }
@@ -32,5 +37,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(transViewModel: TransactionViewModel())
+    HomeView(transViewModel: TransactionViewModel(), selectedTab: .constant(.home))
 }
