@@ -43,6 +43,7 @@ struct TransactionRowView: View {
 #Preview {
     TransactionRowView(
         transaction: Transaction(
+            id: UUID(),
             title: "Teste",
             amount: 100,
             category: Category.food,

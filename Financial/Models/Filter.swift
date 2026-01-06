@@ -1,12 +1,14 @@
 //
-//  Category.swift
+//  Filter.swift
 //  Financial
 //
-//  Created by Gabriel Navarro on 23/12/25.
+//  Created by Gabriel Navarro on 05/01/26.
 //
 
-enum Category: String, CaseIterable, Identifiable, Codable {
+enum Filter: String, CaseIterable, Identifiable {
+    case all = "Todos"
     case entry = "Entrada"
+    case exit = "Saída"
     case food = "Alimentação"
     case transport = "Transporte"
     case leisure = "Lazer"

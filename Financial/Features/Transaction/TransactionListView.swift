@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TransactionListView: View {
     @ObservedObject var transactionViewModel: TransactionViewModel
+    @State private var showingFilters: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -47,6 +48,17 @@ struct TransactionListView: View {
                     }
                 }
                 .sharedBackgroundVisibility(.hidden)
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    Button{ showingFilters = true }
+                    label: { Image(systemName: "line.3.horizontal.decrease.circle") }
+                }
+                .sharedBackgroundVisibility(.hidden)
+            }
+            .sheet(isPresented: $showingFilters) {
+                FilterView(viewModel: transactionViewModel)
+                    .presentationDetents([.height(400)])
+                    .presentationDragIndicator(.visible)
             }
         }
     }
