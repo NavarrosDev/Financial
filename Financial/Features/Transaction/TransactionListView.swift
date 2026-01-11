@@ -21,7 +21,7 @@ struct TransactionListView: View {
                 .listRowInsets(EdgeInsets())
                 
                 Section("Ultimos lançamentos") {
-                    let transactions = transactionViewModel.sortedTransactions
+                    let transactions = transactionViewModel.filteredTransactions
                     if transactions.isEmpty {
                         Text("Nenhum lançamento feito ainda.")
                             .foregroundColor(.gray)

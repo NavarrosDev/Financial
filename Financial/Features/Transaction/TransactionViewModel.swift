@@ -12,7 +12,7 @@ class TransactionViewModel: ObservableObject {
     @AppStorage("monthlyBudget") var monthlyBudget: Double = 0.0
 
     @Published var transactions: [Transaction] = []
-    @Published var activeFilter: [Filter] = [.empty]
+    @Published var activeFilter: [Filter] = []
     
     private let saveKey = "SavedTransactions"
     
@@ -24,6 +24,27 @@ class TransactionViewModel: ObservableObject {
     
     var sortedTransactions: [Transaction] {
         transactions.sorted { $0.date > $1.date }
+    }
+    
+    var filteredTransactions: [Transaction] {
+        if activeFilter.isEmpty {
+            return sortedTransactions
+        }
+        
+        return sortedTransactions.filter { transaction in
+            if transaction.transactionType == .income {
+                return activeFilter.contains(.entry)
+            }
+            
+            if transaction.transactionType == .expense {
+                let specifyCategoryFilter = activeFilter.contains { filter in
+                    filter.rawValue == transaction.category.rawValue
+                }
+                
+                return specifyCategoryFilter
+            }
+            return false
+        }
     }
     
     var totalIncomes: Double {

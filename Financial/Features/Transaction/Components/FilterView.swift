@@ -35,10 +35,13 @@ struct FilterView: View {
             Spacer()
             
             HStack {
-                Button("Voltar") { dismiss() }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .padding()
-                    .foregroundStyle(Color.red)
+                Button("Voltar") {
+                    filterTemp = []
+                    dismiss()
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .padding()
+                .foregroundStyle(Color.red)
                 
                 Button("Aplicar") {
                     viewModel.activeFilter = filterTemp
@@ -65,36 +68,16 @@ struct FilterView: View {
                     .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 1)
             )
             .onTapGesture {
-                if filter == .all {
-                    if filterTemp.contains(.all) {
-                        filterTemp.removeAll()
-                    } else {
-                        filterTemp = Filter.allCases
-                    }
-                    return
-                }
-                
                 if filterTemp.contains(filter) {
                     if let index = filterTemp.firstIndex(of: filter) {
                         filterTemp.remove(at: index)
                     }
-                    
-                    if let allIndex = filterTemp.firstIndex(of: .all) {
-                        filterTemp.remove(at: allIndex)
-                    }
-                } else {
-                    filterTemp.append(filter)
-                    
-                    let commonItem = Filter.allCases.filter { $0 != .all }
-                        if commonItem.allSatisfy({ filterTemp.contains($0) }) {
-                            if !filterTemp.contains(.all) {
-                                filterTemp.append(.all)
-                            }
-                        }
+                    return
+                }
+                filterTemp.append(filter)
                 }
             }
     }
-}
 
 #Preview {
     FilterView(viewModel: TransactionViewModel())
