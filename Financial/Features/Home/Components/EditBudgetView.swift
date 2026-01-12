@@ -20,15 +20,15 @@ struct EditBudgetView: View {
                 Section("Defina seu limite mensal") {
                     HStack {
                         Text("R$")
-                        TextField("0.00", text: $textInput)
+                        TextField("0,00", text: $textInput)
                             .keyboardType(.decimalPad)
-                            .onChange(of: textInput) { oldValue, newValue in
+                            .onChange(of: textInput) { _, newValue in
                                 textInput = newValue.sanitizedNumeric()
                             }
                     }
                 }
             }
-            .navigationTitle("Alterar Meta")
+            .navigationTitle("Alterar Limite")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

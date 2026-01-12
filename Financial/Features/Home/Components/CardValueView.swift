@@ -19,7 +19,7 @@ struct CardValueView: View {
                 .bold()
                 .padding(.top, 10)
           
-            Text("R$\(type == .income ? "" : "-")\(value, specifier: "%.2f")")
+            Text("R$\(type == .expense && value != 0 ? "-" : "")\(value, specifier: "%.2f")")
                 .font(.title2)
                 .padding(.bottom, 10)
         }

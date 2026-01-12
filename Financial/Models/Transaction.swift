@@ -7,15 +7,15 @@
 
 import Foundation
 
-enum TransactionType: String, CaseIterable, Identifiable {
+enum TransactionType: String, CaseIterable, Identifiable, Codable {
     case income = "Entrada"
     case expense = "Saída"
     
     var id: String { self.rawValue }
 }
 
-struct Transaction: Identifiable {
-    let id = UUID()
+struct Transaction: Identifiable, Codable {
+    let id: UUID
     let title: String
     let amount: Double
     let category: Category

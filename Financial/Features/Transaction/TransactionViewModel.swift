@@ -9,12 +9,15 @@ import SwiftUI
 import Combine
 
 class TransactionViewModel: ObservableObject {
-    @Published var transactions: [Transaction]
-    @Published var monthlyBudget: Double
+    @AppStorage("monthlyBudget") var monthlyBudget: Double = 0.0
+
+    @Published var transactions: [Transaction] = []
+    @Published var activeFilter = Set<Filter>()
+    
+    private let saveKey = "SavedTransactions"
     
     init() {
-        self.transactions = []
-        self.monthlyBudget = 0.0
+        self.loadData()
     }
     
     // MARK: Usadas no escopo Transaction
@@ -22,15 +25,36 @@ class TransactionViewModel: ObservableObject {
     var sortedTransactions: [Transaction] {
         transactions.sorted { $0.date > $1.date }
     }
+    
+    var filteredTransactions: [Transaction] {
+        if activeFilter.isEmpty {
+            return sortedTransactions
+        }
         
+        return sortedTransactions.filter { transaction in
+            if transaction.transactionType == .income {
+                return activeFilter.contains(.entry)
+            }
+            
+            if transaction.transactionType == .expense {
+                let specifyCategoryFilter = activeFilter.contains { filter in
+                    filter.rawValue == transaction.category.rawValue
+                }
+                
+                return specifyCategoryFilter
+            }
+            return false
+        }
+    }
+    
     var totalIncomes: Double {
         transactions.filter { $0.transactionType == .income }.reduce(0) { $0 + $1.amount }
     }
-
+    
     var totalExpenses: Double {
         transactions.filter { $0.transactionType == .expense }.reduce(0) { $0 + $1.amount }
     }
-
+    
     var totalAmount: Double {
         totalIncomes - totalExpenses
     }
@@ -66,6 +90,7 @@ class TransactionViewModel: ObservableObject {
     
     func addTransaction(title: String, amount: Double, category: Category, transactionType: TransactionType) -> Void {
         let newTransaction = Transaction(
+            id: UUID(),
             title: title,
             amount: amount,
             category: category,
@@ -73,8 +98,9 @@ class TransactionViewModel: ObservableObject {
             date: Date()
         )
         transactions.append(newTransaction)
+        saveData()
     }
-        
+    
     func removeTransaction(at offset: IndexSet, from displayedList: [Transaction]) -> Void {
         offset.forEach { index in
             let transactionToDelete = displayedList[index]
@@ -82,16 +108,35 @@ class TransactionViewModel: ObservableObject {
                 transactions.remove(at: originalIndex)
             }
         }
+        saveData()
     }
     
     static func filterNumericInput(_ input: String) -> String {
         var filtered = input
             .replacingOccurrences(of: ",", with: ".")
             .filter { !"0123456789.".contains($0) }
-            
+        
         let component = filtered.split(separator: ".")
         if component.count > 0 { filtered = "\(component[0]).\(component[1])" }
         
         return filtered
+    }
+    
+    // MARK: Funcitons de Persistencia
+    
+    func loadData() {
+        if let data = UserDefaults.standard.data(forKey: saveKey) {
+            if let decoded = try? JSONDecoder().decode([Transaction].self, from: data) {
+                self.transactions = decoded
+                return
+            }
+        }
+        self.transactions = []
+    }
+    
+    func saveData() {
+        if let encoded = try? JSONEncoder().encode(transactions) {
+            UserDefaults.standard.set(encoded, forKey: saveKey)
+        }
     }
 }
