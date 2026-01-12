@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FilterView: View {
     @ObservedObject var viewModel: TransactionViewModel
-    @State var filterTemp: [Filter] = []
+    @State var filterTemp = Set<Filter>()
     @Environment(\.dismiss) var dismiss
     
     init(viewModel: TransactionViewModel) {
@@ -74,7 +74,7 @@ struct FilterView: View {
                     }
                     return
                 }
-                filterTemp.append(filter)
+                filterTemp.insert(filter)
                 }
             }
     }

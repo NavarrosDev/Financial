@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct sumaryCardButtonView: View {
+struct SumaryCardButtonView: View {
     var value: Double
     var type: TransactionType
     let action: () -> Void

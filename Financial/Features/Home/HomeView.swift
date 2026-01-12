@@ -17,11 +17,13 @@ struct HomeView: View {
             ScrollView {
                 AvaliableToSpendCardView(transViewModel: transViewModel, showEditBudget: $showEditBudget)
                 HStack(spacing: 16) {
-                    sumaryCardButtonView(value: transViewModel.totalIncomes, type: .income) {
+                    SumaryCardButtonView(value: transViewModel.totalIncomes, type: .income) {
                         selectedTab = .transactions
+                        transViewModel.activeFilter = Set([.entry])
                     }
-                    sumaryCardButtonView(value: transViewModel.totalExpenses, type: .expense) {
+                    SumaryCardButtonView(value: transViewModel.totalExpenses, type: .expense) {
                         selectedTab = .transactions
+                        transViewModel.activeFilter = Set(Filter.allCases.filter { $0 != .entry })
                     }
                 }
                 .padding(.horizontal)
@@ -39,3 +41,4 @@ struct HomeView: View {
 #Preview {
     HomeView(transViewModel: TransactionViewModel(), selectedTab: .constant(.home))
 }
+

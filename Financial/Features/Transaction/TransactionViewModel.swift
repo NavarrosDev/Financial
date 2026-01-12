@@ -12,7 +12,7 @@ class TransactionViewModel: ObservableObject {
     @AppStorage("monthlyBudget") var monthlyBudget: Double = 0.0
 
     @Published var transactions: [Transaction] = []
-    @Published var activeFilter: [Filter] = []
+    @Published var activeFilter = Set<Filter>()
     
     private let saveKey = "SavedTransactions"
     
