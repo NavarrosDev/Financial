@@ -15,19 +15,23 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
+                SumaryCardButtonView(title: "Valor Total", value: transViewModel.totalAmount, type: .income) { }
+                    .padding(.horizontal)
+                
                 AvaliableToSpendCardView(transViewModel: transViewModel, showEditBudget: $showEditBudget)
                 HStack(spacing: 16) {
-                    SumaryCardButtonView(value: transViewModel.totalIncomes, type: .income) {
+                    SumaryCardButtonView(title: "Entradas", value: transViewModel.totalIncomes, type: .income) {
                         selectedTab = .transactions
                         transViewModel.activeFilter = Set([.entry])
                     }
-                    SumaryCardButtonView(value: transViewModel.totalExpenses, type: .expense) {
+                    SumaryCardButtonView(title: "Saídas", value: transViewModel.totalExpenses, type: .expense) {
                         selectedTab = .transactions
                         transViewModel.activeFilter = Set(Filter.allCases.filter { $0 != .entry })
                     }
                 }
                 .padding(.horizontal)
             }
+            .padding(.top, 30)
             .background(Color(uiColor: .systemGroupedBackground))
             .navigationTitle("Olá, Gabriel")
             .sheet(isPresented: $showEditBudget) {

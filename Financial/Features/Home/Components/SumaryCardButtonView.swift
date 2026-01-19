@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct SumaryCardButtonView: View {
+    var title: String
     var value: Double
     var type: TransactionType
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
-            CardValueView(value: value, type: type)
+            CardValueView(title: title, value: value, type: type)
         }
         .buttonStyle(.plain)
     }
