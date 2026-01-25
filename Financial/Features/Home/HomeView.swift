@@ -33,7 +33,7 @@ struct HomeView: View {
             }
             .padding(.top, 30)
             .background(Color(uiColor: .systemGroupedBackground))
-            .navigationTitle("Olá, Gabriel")
+            .navigationTitle("Olá, \(transViewModel.userName)")
             .sheet(isPresented: $showEditBudget) {
                 EditBudgetView(budget: $transViewModel.monthlyBudget)
                     .presentationDetents([.fraction(0.3)])
