@@ -24,7 +24,7 @@ struct RootView: View {
                 .tabItem {
                     Label("Finanças", systemImage: "list.bullet")
                 }.tag(AppTab.transactions)
-            DashboardView()
+            DashboardView(viewModel: transactionViewModel)
                 .tabItem {
                     Label("DashBoard", systemImage: "graph.2d")
                 }.tag(AppTab.dashboard)

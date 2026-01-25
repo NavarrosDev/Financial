@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct CardValueView: View {
+    var title: String
     var value: Double
     var type: TransactionType
     
     var body: some View {
         VStack(spacing: 15) {
-            Text(type == .income ? "Entradas" : "Saídas")
+            Text(title)
                 .font(.title)
-                .foregroundStyle(type == .income ? .green : .red)
+                .foregroundStyle(colorTitle)
                 .bold()
                 .padding(.top, 10)
           
@@ -26,12 +27,19 @@ struct CardValueView: View {
         .padding()
         .frame(maxWidth: .infinity)
         .frame(height: 150)
-        .background(Color(uiColor: .systemBackground))
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+    }
+    
+    var colorTitle: Color {
+        if title.contains("Total") {
+            return .primary
+        }
+        return type == .income ? .green : .red
     }
 }
 
 #Preview {
-    CardValueView(value: 2666.66, type: .expense)
+    CardValueView(title: "Valor Total", value: 2666.66, type: .expense)
 }

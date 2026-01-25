@@ -139,4 +139,24 @@ class TransactionViewModel: ObservableObject {
             UserDefaults.standard.set(encoded, forKey: saveKey)
         }
     }
+    
+    // MARK: Dash
+    
+    var expensesByCategory: [CategoryTotal] {
+        var result: [CategoryTotal] = []
+        
+        for categoryName in Filter.allCases {
+            let transactionsForCategory = transactions.filter {
+                $0.category.rawValue == categoryName.rawValue && $0.transactionType == .expense
+            }
+            
+            let totalAmount = transactionsForCategory.reduce(0) { $0 + $1.amount }
+            
+            if totalAmount > 0 {
+                result.append(CategoryTotal(category: categoryName.rawValue, total: totalAmount))
+            }
+        }
+        
+        return result.sorted { $0.total > $1.total }
+    }
 }
