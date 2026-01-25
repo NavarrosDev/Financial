@@ -15,3 +15,9 @@ enum Category: String, CaseIterable, Identifiable, Codable {
     
     var id: Self { self }
 }
+
+struct CategoryTotal: Identifiable {
+    var id: String { category }
+    let category: String
+    let total: Double
+}

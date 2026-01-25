@@ -41,7 +41,7 @@ struct AvaliableToSpendCardView: View {
                     .foregroundStyle(.secondary)
                 }
                 .padding(24)
-                .background(Color(uiColor: .systemBackground))
+                .background(Color(uiColor: .secondarySystemGroupedBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
                 .padding(.horizontal)

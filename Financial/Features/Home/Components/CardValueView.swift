@@ -27,14 +27,14 @@ struct CardValueView: View {
         .padding()
         .frame(maxWidth: .infinity)
         .frame(height: 150)
-        .background(Color(uiColor: .systemBackground))
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
     }
     
     var colorTitle: Color {
         if title.contains("Total") {
-            return .black
+            return .primary
         }
         return type == .income ? .green : .red
     }
