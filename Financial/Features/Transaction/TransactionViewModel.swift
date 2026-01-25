@@ -10,6 +10,7 @@ import Combine
 
 class TransactionViewModel: ObservableObject {
     @AppStorage("monthlyBudget") var monthlyBudget: Double = 0.0
+    @AppStorage("userName") var userName: String = "User"
 
     @Published var transactions: [Transaction] = []
     @Published var activeFilter = Set<Filter>()
